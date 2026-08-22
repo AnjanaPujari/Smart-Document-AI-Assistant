@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Smart Document AI Assistant</title>
+
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+
+            <div class="brand">
+                <div class="brand-icon">✦</div>
+
+                <div>
+                    <h1>DocuMind</h1>
+                    <p>AI Document Assistant</p>
+                </div>
+            </div>
+
+
+            <div class="sidebar-section">
+
+                <p class="section-title">
+                    DOCUMENT
+                </p>
+
+                <div class="document-card">
+
+                    <div class="document-icon">
+                        📄
+                    </div>
+
+                    <div class="document-info">
+
+                        <strong id="fileName">
+                            No document
+                        </strong>
+
+                        <span id="fileStatus">
+                            Upload a PDF or DOCX
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="sidebar-bottom">
+
+                <div class="status-dot"></div>
+
+                <span>
+                    AI Assistant Online
+                </span>
+
+            </div>
+
+        </aside>
+
+
+        <!-- Main Content -->
+        <main class="main">
+
+            <header class="topbar">
+
+                <div>
+
+                    <p class="eyebrow">
+                        SMART DOCUMENT AI
+                    </p>
+
+                    <h2>
+                        Ask your documents.
+                    </h2>
+
+                    <p class="subtitle">
+                        Upload a document and let AI find
+                        the answers for you.
+                    </p>
+
+                </div>
+
+            </header>
+
+
+            <!-- Upload Area -->
+            <section class="upload-section">
+
+                <div
+                    class="upload-box"
+                    id="uploadBox"
+                >
+
+                    <div class="upload-icon">
+                        ↑
+                    </div>
+
+                    <h3>
+                        Upload your document
+                    </h3>
+
+                    <p>
+                        Drag & drop your PDF or DOCX here
+                        or choose a file from your device.
+                    </p>
+
+                    <label
+                        for="fileInput"
+                        class="upload-button"
+                    >
+                        Choose Document
+                    </label>
+
+                    <input
+                        type="file"
+                        id="fileInput"
+                        accept=".pdf,.docx"
+                        hidden
+                    >
+
+                    <span class="file-hint">
+                        Supported formats: PDF, DOCX
+                    </span>
+
+                </div>
+
+            </section>
+
+
+            <!-- Question Area -->
+            <section class="chat-section">
+
+                <div class="section-heading">
+
+                    <div>
+
+                        <p class="eyebrow">
+                            DOCUMENT Q&A
+                        </p>
+
+                        <h3>
+                            Ask anything about your document
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                <div class="question-card">
+
+                    <textarea
+                        id="questionInput"
+                        placeholder="Ask a question about your uploaded document..."
+                        rows="3"
+                    ></textarea>
+
+
+                    <div class="question-footer">
+
+                        <span id="questionHint">
+                            Answers are based on your uploaded document.
+                        </span>
+
+                        <button
+                            id="askButton"
+                            class="ask-button"
+                        >
+                            Ask AI
+                            <span>→</span>
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Answer -->
+                <div
+                    class="answer-card"
+                    id="answerCard"
+                >
+
+                    <div class="answer-header">
+
+                        <div class="answer-title">
+
+                            <div class="ai-icon">
+                                ✦
+                            </div>
+
+                            <div>
+                                <strong>
+                                    AI Answer
+                                </strong>
+
+                                <span>
+                                    Grounded in your document
+                                </span>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        class="answer-content"
+                        id="answerContent"
+                    >
+
+                        <p class="empty-answer">
+                            Your answer will appear here.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- Loading -->
+            <div
+                class="loading"
+                id="loading"
+            >
+
+                <div class="spinner"></div>
+
+                <span>
+                    AI is reading your document...
+                </span>
+
+            </div>
+
+
+            <!-- Error -->
+            <div
+                class="error-message"
+                id="errorMessage"
+            ></div>
+
+        </main>
+
+    </div>
+
+
+    <script src="/static/script.js"></script>
+
+</body>
+</html>
