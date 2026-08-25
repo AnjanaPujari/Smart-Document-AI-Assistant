@@ -51,42 +51,27 @@ The system extracts text from the uploaded document, divides it into smaller ove
 The application follows a Retrieval-Augmented Generation (RAG) workflow:
 
 User uploads document
-        ↓
+        ->
 Text extraction
-        ↓
+        ->
 Text chunking
-        ↓
+        ->
 Sentence embeddings
-        ↓
+        ->
 FAISS vector index
-        ↓
+        ->
 User asks a question
-        ↓
+        ->
 Question embedding
-        ↓
+        ->
 Relevant chunks retrieved
-        ↓
+        ->
 Retrieved context sent to LLM
-        ↓
+        ->
 Answer generated from document context
-        ↓
+        ->
 Answer displayed in UI
 
-## Project Structure
-
-Smart-Document-AI-Assistant/
-│
-├── frontend/
-│   ├── index.html
-│   ├── style.css
-│   └── script.js
-│
-├── uploads/
-│
-├── main.py
-├── main_day13_backup.py
-├── .gitignore
-└── README.md
 
 ## Installation
 
