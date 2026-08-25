@@ -16,13 +16,9 @@ const errorMessage = document.getElementById("errorMessage");
 
 let documentUploaded = false;
 
-
-// ==============================
-// FILE SELECTION
-// ==============================
+/* FILE SELECTION */
 
 fileInput.addEventListener("change", () => {
-
     const file = fileInput.files[0];
 
     if (!file) {
@@ -32,13 +28,9 @@ fileInput.addEventListener("change", () => {
     uploadDocument(file);
 });
 
-
-// ==============================
-// UPLOAD DOCUMENT
-// ==============================
+/* UPLOAD DOCUMENT */
 
 async function uploadDocument(file) {
-
     hideError();
 
     const allowedTypes = [
@@ -47,10 +39,13 @@ async function uploadDocument(file) {
     ];
 
     if (!allowedTypes.includes(file.type)) {
+        showError("Only PDF and DOCX files are allowed.");
 
-        showError(
-            "Only PDF and DOCX files are allowed."
-        );
+        fileInput.value = "";
+        documentUploaded = false;
+
+        fileName.textContent = "No document";
+        fileStatus.textContent = "Upload a PDF or DOCX";
 
         return;
     }
@@ -58,12 +53,12 @@ async function uploadDocument(file) {
     fileName.textContent = file.name;
     fileStatus.textContent = "Uploading...";
 
-    const formData = new FormData();
+    documentUploaded = false;
 
+    const formData = new FormData();
     formData.append("file", file);
 
     try {
-
         const response = await fetch(
             `${API_BASE_URL}/upload`,
             {
@@ -75,24 +70,21 @@ async function uploadDocument(file) {
         const data = await response.json();
 
         if (!response.ok) {
-
             throw new Error(
+                data.detail ||
                 data.error ||
                 "Document upload failed."
             );
         }
 
         if (data.error) {
-
-            throw new Error(
-                data.error
-            );
+            throw new Error(data.error);
         }
 
         documentUploaded = true;
 
         fileStatus.textContent =
-            `${data.number_of_chunks} chunks processed`;
+            `Uploaded successfully • ${data.number_of_chunks} chunks`;
 
         answerContent.innerHTML = `
             <p class="empty-answer">
@@ -102,11 +94,9 @@ async function uploadDocument(file) {
         `;
 
     } catch (error) {
-
         documentUploaded = false;
 
-        fileStatus.textContent =
-            "Upload failed";
+        fileStatus.textContent = "Upload failed";
 
         showError(
             error.message ||
@@ -115,26 +105,19 @@ async function uploadDocument(file) {
     }
 }
 
-
-// ==============================
-// ASK QUESTION
-// ==============================
+/* ASK QUESTION */
 
 askButton.addEventListener(
     "click",
     askQuestion
 );
 
-
 async function askQuestion() {
-
     hideError();
 
-    const question =
-        questionInput.value.trim();
+    const question = questionInput.value.trim();
 
     if (!documentUploaded) {
-
         showError(
             "Please upload a document before asking a question."
         );
@@ -143,7 +126,6 @@ async function askQuestion() {
     }
 
     if (!question) {
-
         showError(
             "Please enter a question."
         );
@@ -152,13 +134,11 @@ async function askQuestion() {
     }
 
     askButton.disabled = true;
-
     loading.classList.add("show");
 
     answerContent.innerHTML = "";
 
     try {
-
         const response = await fetch(
             `${API_BASE_URL}/search?query=${encodeURIComponent(question)}`,
             {
@@ -169,7 +149,6 @@ async function askQuestion() {
         const data = await response.json();
 
         if (!response.ok) {
-
             throw new Error(
                 data.detail ||
                 data.answer ||
@@ -178,100 +157,67 @@ async function askQuestion() {
         }
 
         if (data.answer) {
-
-            answerContent.textContent =
-                data.answer;
-
+            answerContent.textContent = data.answer;
         } else {
-
             answerContent.textContent =
                 "Information not found in the document.";
         }
 
     } catch (error) {
-
         showError(
             error.message ||
             "Something went wrong while getting the answer."
         );
 
     } finally {
-
         askButton.disabled = false;
-
         loading.classList.remove("show");
     }
 }
 
-
-// ==============================
-// DRAG & DROP
-// ==============================
+/* DRAG & DROP */
 
 uploadBox.addEventListener(
     "dragover",
     (event) => {
-
         event.preventDefault();
 
-        uploadBox.classList.add(
-            "dragging"
-        );
+        uploadBox.classList.add("dragging");
     }
 );
-
 
 uploadBox.addEventListener(
     "dragleave",
     () => {
-
-        uploadBox.classList.remove(
-            "dragging"
-        );
+        uploadBox.classList.remove("dragging");
     }
 );
-
 
 uploadBox.addEventListener(
     "drop",
     (event) => {
-
         event.preventDefault();
 
-        uploadBox.classList.remove(
-            "dragging"
-        );
+        uploadBox.classList.remove("dragging");
 
-        const file =
-            event.dataTransfer.files[0];
+        const file = event.dataTransfer.files[0];
 
         if (file) {
-
             uploadDocument(file);
         }
     }
 );
 
-
-// ==============================
-// ERROR HANDLING
-// ==============================
+/* ERROR HANDLING */
 
 function showError(message) {
-
     errorMessage.textContent = message;
 
-    errorMessage.classList.add(
-        "show"
-    );
+    errorMessage.classList.add("show");
 }
 
-
 function hideError() {
-
     errorMessage.textContent = "";
 
-    errorMessage.classList.remove(
-        "show"
-    );
+    errorMessage.classList.remove("show");
 }

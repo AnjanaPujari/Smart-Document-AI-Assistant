@@ -55,24 +55,16 @@ textarea {
     min-height: 100vh;
 }
 
-
-/* =========================
-   SIDEBAR
-========================= */
+/* SIDEBAR */
 
 .sidebar {
     width: 270px;
     min-height: 100vh;
-
     padding: 28px 20px;
-
     background: rgba(12, 17, 32, 0.82);
-
     border-right: 1px solid var(--border);
-
     display: flex;
     flex-direction: column;
-
     backdrop-filter: blur(18px);
 }
 
@@ -80,16 +72,13 @@ textarea {
     display: flex;
     align-items: center;
     gap: 13px;
-
     margin-bottom: 55px;
 }
 
 .brand-icon {
     width: 43px;
     height: 43px;
-
     border-radius: 13px;
-
     display: grid;
     place-items: center;
 
@@ -114,21 +103,15 @@ textarea {
 
 .brand p {
     margin-top: 3px;
-
     color: var(--muted);
-
     font-size: 11px;
 }
-
 
 .section-title,
 .eyebrow {
     color: #727e9b;
-
     font-size: 10px;
-
     font-weight: 700;
-
     letter-spacing: 1.5px;
 }
 
@@ -140,33 +123,24 @@ textarea {
     display: flex;
     align-items: center;
     gap: 12px;
-
     padding: 13px;
-
     border: 1px solid var(--border);
-
     border-radius: 14px;
-
     background: rgba(255, 255, 255, 0.025);
 }
 
 .document-icon {
     width: 39px;
     height: 39px;
-
     display: grid;
     place-items: center;
-
     border-radius: 11px;
-
     background: rgba(124, 108, 255, 0.12);
-
     font-size: 18px;
 }
 
 .document-info {
     min-width: 0;
-
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -174,7 +148,6 @@ textarea {
 
 .document-info strong {
     font-size: 12px;
-
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -182,28 +155,22 @@ textarea {
 
 .document-info span {
     color: var(--muted);
-
     font-size: 10px;
 }
 
 .sidebar-bottom {
     margin-top: auto;
-
     display: flex;
     align-items: center;
     gap: 8px;
-
     color: #7f8ba5;
-
     font-size: 11px;
 }
 
 .status-dot {
     width: 7px;
     height: 7px;
-
     border-radius: 50%;
-
     background: var(--success);
 
     box-shadow:
@@ -211,19 +178,13 @@ textarea {
         rgba(72, 213, 151, 0.7);
 }
 
-
-/* =========================
-   MAIN
-========================= */
+/* MAIN */
 
 .main {
     flex: 1;
-
     width: 100%;
     max-width: 1100px;
-
     margin: 0 auto;
-
     padding: 48px 55px 70px;
 }
 
@@ -237,39 +198,25 @@ textarea {
 
 .topbar h2 {
     font-size: clamp(30px, 4vw, 47px);
-
     line-height: 1.05;
-
     letter-spacing: -2px;
-
     max-width: 650px;
 }
 
 .subtitle {
     margin-top: 14px;
-
     color: var(--muted);
-
     font-size: 14px;
-
     line-height: 1.7;
-
     max-width: 560px;
 }
 
-
-/* =========================
-   UPLOAD
-========================= */
+/* UPLOAD */
 
 .upload-box {
     padding: 45px 25px;
-
     text-align: center;
-
-    border: 1px dashed
-        rgba(124, 108, 255, 0.42);
-
+    border: 1px dashed rgba(124, 108, 255, 0.42);
     border-radius: 22px;
 
     background:
@@ -287,7 +234,6 @@ textarea {
 
 .upload-box:hover {
     transform: translateY(-2px);
-
     border-color: var(--accent);
 
     background:
@@ -300,56 +246,39 @@ textarea {
 
 .upload-box.dragging {
     border-color: var(--success);
-
-    background:
-        rgba(72, 213, 151, 0.08);
+    background: rgba(72, 213, 151, 0.08);
 }
 
 .upload-icon {
     width: 58px;
     height: 58px;
-
     margin: 0 auto 18px;
-
     display: grid;
     place-items: center;
-
     border-radius: 18px;
-
-    background:
-        rgba(124, 108, 255, 0.14);
-
+    background: rgba(124, 108, 255, 0.14);
     color: #aaa0ff;
-
     font-size: 28px;
-
     font-weight: 300;
 }
 
 .upload-box h3 {
     font-size: 19px;
-
     margin-bottom: 8px;
 }
 
 .upload-box p {
     color: var(--muted);
-
     font-size: 12px;
-
     line-height: 1.6;
-
     margin-bottom: 22px;
 }
 
 .upload-button {
     display: inline-flex;
-
     align-items: center;
     justify-content: center;
-
     padding: 11px 19px;
-
     border-radius: 11px;
 
     background:
@@ -360,11 +289,8 @@ textarea {
         );
 
     color: white;
-
     font-size: 12px;
-
     font-weight: 700;
-
     cursor: pointer;
 
     box-shadow:
@@ -386,18 +312,12 @@ textarea {
 
 .file-hint {
     display: block;
-
     margin-top: 13px;
-
     color: #68738d;
-
     font-size: 10px;
 }
 
-
-/* =========================
-   CHAT
-========================= */
+/* CHAT */
 
 .chat-section {
     margin-top: 45px;
@@ -409,14 +329,12 @@ textarea {
 
 .section-heading h3 {
     font-size: 20px;
-
     letter-spacing: -0.5px;
 }
 
 .question-card,
 .answer-card {
     border: 1px solid var(--border);
-
     border-radius: 18px;
 
     background:
@@ -435,23 +353,14 @@ textarea {
 
 .question-card textarea {
     width: 100%;
-
     resize: vertical;
-
     min-height: 82px;
-
     padding: 10px;
-
     border: none;
-
     outline: none;
-
     background: transparent;
-
     color: var(--text);
-
     font-size: 14px;
-
     line-height: 1.6;
 }
 
@@ -461,29 +370,21 @@ textarea {
 
 .question-footer {
     display: flex;
-
     align-items: center;
-
     justify-content: space-between;
-
     gap: 15px;
-
     padding-top: 13px;
-
     border-top: 1px solid var(--border);
 }
 
 .question-footer span {
     color: #68738d;
-
     font-size: 10px;
 }
 
 .ask-button {
     border: none;
-
     padding: 10px 17px;
-
     border-radius: 11px;
 
     background:
@@ -494,17 +395,12 @@ textarea {
         );
 
     color: white;
-
     font-size: 12px;
-
     font-weight: 700;
-
     cursor: pointer;
 
     display: flex;
-
     align-items: center;
-
     gap: 8px;
 
     transition:
@@ -518,49 +414,35 @@ textarea {
 
 .ask-button:disabled {
     opacity: 0.55;
-
     cursor: not-allowed;
-
     transform: none;
 }
 
-
-/* =========================
-   ANSWER
-========================= */
+/* ANSWER */
 
 .answer-card {
     margin-top: 18px;
-
     padding: 20px;
 }
 
 .answer-header {
     padding-bottom: 15px;
-
     border-bottom: 1px solid var(--border);
 }
 
 .answer-title {
     display: flex;
-
     align-items: center;
-
     gap: 11px;
 }
 
 .ai-icon {
     width: 34px;
     height: 34px;
-
     display: grid;
     place-items: center;
-
     border-radius: 10px;
-
-    background:
-        rgba(124, 108, 255, 0.14);
-
+    background: rgba(124, 108, 255, 0.14);
     color: #aaa0ff;
 }
 
@@ -575,21 +457,15 @@ textarea {
 
 .answer-title span {
     margin-top: 3px;
-
     color: #68738d;
-
     font-size: 10px;
 }
 
 .answer-content {
     padding-top: 18px;
-
     color: #d7dcef;
-
     font-size: 13px;
-
     line-height: 1.8;
-
     white-space: pre-wrap;
 }
 
@@ -597,24 +473,15 @@ textarea {
     color: #5f6a83;
 }
 
-
-/* =========================
-   LOADING
-========================= */
+/* LOADING */
 
 .loading {
     display: none;
-
     align-items: center;
-
     justify-content: center;
-
     gap: 10px;
-
     margin-top: 18px;
-
     color: #8995af;
-
     font-size: 11px;
 }
 
@@ -625,16 +492,10 @@ textarea {
 .spinner {
     width: 15px;
     height: 15px;
-
-    border: 2px solid
-        rgba(255, 255, 255, 0.12);
-
+    border: 2px solid rgba(255, 255, 255, 0.12);
     border-top-color: var(--accent);
-
     border-radius: 50%;
-
-    animation:
-        spin 0.8s linear infinite;
+    animation: spin 0.8s linear infinite;
 }
 
 @keyframes spin {
@@ -643,28 +504,16 @@ textarea {
     }
 }
 
-
-/* =========================
-   ERROR
-========================= */
+/* ERROR */
 
 .error-message {
     display: none;
-
     margin-top: 18px;
-
     padding: 12px 15px;
-
-    border: 1px solid
-        rgba(255, 107, 129, 0.25);
-
+    border: 1px solid rgba(255, 107, 129, 0.25);
     border-radius: 12px;
-
-    background:
-        rgba(255, 107, 129, 0.07);
-
+    background: rgba(255, 107, 129, 0.07);
     color: #ff91a2;
-
     font-size: 11px;
 }
 
@@ -672,20 +521,15 @@ textarea {
     display: block;
 }
 
-
-/* =========================
-   RESPONSIVE
-========================= */
+/* RESPONSIVE */
 
 @media (max-width: 800px) {
-
     .sidebar {
         display: none;
     }
 
     .main {
-        padding:
-            30px 18px 50px;
+        padding: 30px 18px 50px;
     }
 
     .topbar h2 {
@@ -698,13 +542,11 @@ textarea {
 
     .question-footer {
         align-items: flex-start;
-
         flex-direction: column;
     }
 
     .ask-button {
         width: 100%;
-
         justify-content: center;
     }
 }

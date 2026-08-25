@@ -4,7 +4,6 @@ from fastapi.responses import FileResponse
 
 from sentence_transformers import SentenceTransformer
 import faiss
-from pydantic import BaseModel
 import uuid
 import os
 from pypdf import PdfReader
@@ -60,31 +59,17 @@ def search_documents(query, chunks, k=3):
 
     return valid_chunks, distances
 
-
-# --------------------------------------------------
 # FASTAPI
-# --------------------------------------------------
 
 app = FastAPI()
+
+
+# FRONTEND
+
 app.mount(
     "/static",
     StaticFiles(directory="frontend"),
     name="static"
-)
-
-
-@app.get("/app")
-def app_page():
-    return FileResponse("frontend/index.html")
-
-# --------------------------------------------------
-# FRONTEND
-# --------------------------------------------------
-
-app.mount(
-    "/frontend",
-    StaticFiles(directory="frontend"),
-    name="frontend"
 )
 
 
@@ -96,98 +81,28 @@ def serve_frontend():
     )
 
 
-# --------------------------------------------------
 # BASIC ENDPOINTS
-# --------------------------------------------------
+
 
 @app.get("/")
 def home():
-    return {
-        "messege": "Hello,Smart Document AI Assistant!"
-    }
 
-
-@app.get("/about")
-def about():
     return {
-        "about": "This is my first FastAPI project"
+        "message":
+            "Hello, Smart Document AI Assistant!"
     }
 
 
 @app.get("/status")
 def status():
+
     return {
-        "status": "Server is running successfully"
+        "status":
+            "Server is running successfully"
     }
 
 
-@app.get("/contact")
-def contact():
-    return {
-        "contact": "anjali@examole.com"
-    }
-
-
-@app.get("/hello/{name}")
-def hello(name: str):
-    return {
-        "message": f"hello {name}"
-    }
-
-
-@app.get("/search")
-def search(document: str):
-    return {
-        "search": document
-    }
-
-
-@app.get("/documents")
-def documents():
-    return [
-        "resume.pdf",
-        "marks.pdf",
-        "invoice.pdf"
-    ]
-
-
-@app.get("/student")
-def student():
-    return {
-        "name": "anjana",
-        "branch": "aiml",
-        "semester": 4
-    }
-
-
-@app.get("/welcome")
-def welcome():
-    return "welcome to Smart Document AI Assistant"
-
-
-# --------------------------------------------------
-# STUDENT MODEL
-# --------------------------------------------------
-
-class student(BaseModel):
-
-    name: str
-    branch: str
-    semester: int
-
-
-@app.post("/student")
-def create_student(student: student):
-
-    return {
-        "message": "student created successfully",
-        "student": student
-    }
-
-
-# --------------------------------------------------
 # EXTRACT TEXT FROM PDF
-# --------------------------------------------------
 
 def extract_pdf_text(file_path):
 
@@ -225,9 +140,7 @@ def extract_pdf_text(file_path):
     return all_chunks, pages
 
 
-# --------------------------------------------------
 # EXTRACT TEXT FROM DOCX
-# --------------------------------------------------
 
 def extract_docx_text(file_path):
 
@@ -289,9 +202,7 @@ def extract_docx_text(file_path):
     return all_chunks
 
 
-# --------------------------------------------------
 # UPLOAD PDF / DOCX
-# --------------------------------------------------
 
 @app.post("/upload")
 def upload_file(
@@ -394,9 +305,8 @@ def upload_file(
     }
 
 
-# --------------------------------------------------
 # SEARCH
-# --------------------------------------------------
+
 
 @app.post("/search")
 def search(query: str):
@@ -404,7 +314,9 @@ def search(query: str):
     if not chunks:
 
         return {
-            "query": query,
+            "query":
+                query,
+
             "answer":
                 "Please upload a document before asking a question."
         }
@@ -418,7 +330,9 @@ def search(query: str):
     if not matching_chunks:
 
         return {
-            "query": query,
+            "query":
+                query,
+
             "answer":
                 "Information not found in the document."
         }
@@ -460,9 +374,7 @@ def search(query: str):
     }
 
 
-# --------------------------------------------------
 # GROQ ANSWER GENERATION
-# --------------------------------------------------
 
 def generate_answer(query, context):
 
