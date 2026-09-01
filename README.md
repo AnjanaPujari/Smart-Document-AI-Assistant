@@ -1,189 +1,295 @@
 # Smart Document AI Assistant
 
-An AI-powered document question-answering system that allows users to upload PDF or DOCX documents and ask questions about their contents.
+An AI-powered document question-answering application that allows users to upload PDF or DOCX documents and ask questions about their content.
 
-The system extracts text from the uploaded document, divides it into smaller overlapping chunks, converts the chunks into embeddings, retrieves the most relevant information using FAISS, and uses a Groq-powered LLM to generate answers based on the retrieved document context.
+The application extracts text from uploaded documents, divides the text into smaller overlapping chunks, generates vector embeddings using FastEmbed, searches for relevant information using FAISS, and uses a Groq-powered LLM to generate answers based only on the uploaded document.
+
+## Live Demo
+
+[Open Smart Document AI Assistant](https://smart-document-ai-assistant.onrender.com)
+
+## GitHub Repository
+
+[Smart Document AI Assistant](https://github.com/AnjanaPujari/Smart-Document-AI-Assistant)
 
 ## Features
 
-- Upload PDF and DOCX documents
+- Upload PDF documents
+- Upload DOCX documents
 - Automatic text extraction
-- Document chunking with overlapping chunks
-- Semantic search using Sentence Transformers
-- Vector similarity search using FAISS
-- AI-powered question answering using Groq
-- Answers grounded in the uploaded document context
-- Instructs the LLM to answer only from the retrieved document context
-- Returns a clear message when information is not found
-- Handles empty questions
-- Handles invalid file types
-- Handles documents with no readable text
-- Modern and responsive web interface
+- Text chunking with overlapping chunks
+- Semantic document search
+- FastEmbed-based embeddings
+- FAISS vector similarity search
+- AI-powered question answering
+- Answers grounded in the uploaded document
+- Handles questions whose answers are not present in the document
+- Empty question validation
+- Invalid file type validation
+- Loading state
+- Error handling
 - Drag-and-drop document upload
-- Loading and error states
-
-## Technologies Used
-
-### Backend
-
-- Python
-- FastAPI
-- Uvicorn
-- Sentence Transformers
-- FAISS
-- PyPDF
-- python-docx
-- LangChain Groq
-
-### AI / NLP
-
-- Sentence Transformers: `all-MiniLM-L6-v2`
-- Groq LLM: `openai/gpt-oss-20b`
-
-### Frontend
-
-- HTML
-- CSS
-- JavaScript
+- Responsive user interface
+- Modern dark-themed UI
+- Production deployment using Render
 
 ## How It Works
 
-The application follows a Retrieval-Augmented Generation (RAG) workflow:
+The application follows a Retrieval-Augmented Generation (RAG) style workflow.
 
-User uploads document
-        ->
-Text extraction
-        ->
-Text chunking
-        ->
-Sentence embeddings
-        ->
-FAISS vector index
-        ->
-User asks a question
-        ->
-Question embedding
-        ->
-Relevant chunks retrieved
-        ->
-Retrieved context sent to LLM
-        ->
-Answer generated from document context
-        ->
-Answer displayed in UI
+```text
+User
+  ↓
+Upload PDF / DOCX
+  ↓
+Text Extraction
+  ↓
+Text Chunking
+  ↓
+FastEmbed
+  ↓
+Vector Embeddings
+  ↓
+FAISS Similarity Search
+  ↓
+Top Relevant Document Chunks
+  ↓
+Groq LLM
+  ↓
+Document-Based Answer
+  ↓
+User
 
+Technology Stack
+Backend
+Python
+FastAPI
+Uvicorn
+PyPDF
+python-docx
+AI / Machine Learning
+FastEmbed
+sentence-transformers/all-MiniLM-L6-v2
+FAISS
+LangChain Groq
+Groq LLM
+Frontend
+HTML5
+CSS3
+JavaScript
+Deployment
+GitHub
+Render
 
-## Installation
+Project stucture
+Smart-Document-AI-Assistant/
+│
+├── frontend/
+│   ├── index.html
+│   ├── style.css
+│   └── script.js
+│
+├── uploads/
+│
+├── main.py
+├── requirements.txt
+├── README.md
+└── .gitignore
 
-### 1. Clone the repository
+Application Workflow
+1. Document Upload
 
-git clone https://github.com/AnjanaPujari/Smart-Document-AI-Assistant.git
+The user uploads a PDF or DOCX document through the web interface.
 
-### 2. Open the project
+The FastAPI /upload endpoint receives and processes the file.
 
-cd Smart-Document-AI-Assistant
+Only PDF and DOCX files are accepted.
 
-### 3. Create a virtual environment
+2. Text Extraction
 
-python -m venv venv
+For PDF files, text is extracted using PyPDF.
 
-### 4. Activate the virtual environment
+For DOCX files, text is extracted using python-docx.
 
-Windows:
+The application also extracts text contained inside DOCX tables.
 
-venv\Scripts\activate
+3. Text Chunking
 
-### 5. Install dependencies
+The extracted text is divided into smaller overlapping chunks.
 
-pip install fastapi uvicorn python-multipart sentence-transformers faiss-cpu pydantic pypdf python-docx langchain-groq
+Current configuration:
+Chunk size: 250 characters
+Overlap: 50 characters
+Chunk size: 250 characters
+Overlap: 50 characters
 
-## Environment Variables
+The overlap helps preserve context between neighboring chunks.
 
-The Groq API key should be stored securely and should not be committed to GitHub.
+4. Embedding Generation
 
-Set the `GROQ_API_KEY` environment variable with your Groq API key.
+Each document chunk is converted into a numerical vector using:
 
-Example:
+sentence-transformers/all-MiniLM-L6-v2
 
-GROQ_API_KEY=your_groq_api_key
+through FastEmbed.
 
-Never commit your actual API key to GitHub.
+The embedding dimension is:
 
-Make sure `.env` is included in `.gitignore` if you choose to store environment variables in a `.env` file.
+384
 
-## Running the Application
+The embeddings are normalized before being stored in the FAISS index.
 
-Start the FastAPI server:
+5. FAISS Similarity Search
 
-uvicorn main:app --reload
+The application uses:
 
-Open the web application:
+FAISS IndexFlatIP
 
-http://127.0.0.1:8000/app
+for vector similarity search.
 
-The FastAPI Swagger documentation is available at:
+When a user asks a question:
 
-http://127.0.0.1:8000/docs
+The question is converted into an embedding.
+The embedding is normalized.
+FAISS searches the document vectors.
+The top 3 relevant chunks are retrieved.
+The retrieved chunks are provided to the LLM as context.
+6. AI Answer Generation
 
-## API Endpoints
+The retrieved document chunks are provided to the Groq LLM.
 
-### Upload Document
+The model is instructed to use only the retrieved document context and not outside knowledge.
 
-POST /upload
+The application uses:
 
-Uploads a PDF or DOCX document, extracts its text, creates chunks, generates embeddings, and stores them in the FAISS index.
+openai/gpt-oss-20b
 
-### Ask a Question
+with temperature set to 0.
 
-POST /search
+If the required information is not available in the retrieved context, the application instructs the model to return:
 
-Accepts a question and retrieves relevant document content before generating an answer.
+Information not found in the document.
+API Endpoints
+GET /
 
-### Application
+Serves the main DocuMind web application.
 
 GET /app
 
-Opens the web-based Smart Document AI Assistant interface.
+Alternative route for serving the frontend application.
 
-## Supported Documents
+GET /status
 
-Currently supported:
+Checks whether the backend server is running.
 
-- PDF (.pdf)
-- Microsoft Word (.docx)
+POST /upload
 
-## Error Handling
+Uploads and processes a PDF or DOCX document.
 
-The application handles several common situations:
+POST /search
 
-- Asking a question before uploading a document
-- Empty questions
-- Unsupported file types
-- Documents with no readable text
-- Questions whose answers are not present in the document
+Accepts a question, retrieves relevant document chunks, and generates an AI-powered answer.
 
-When information cannot be found in the uploaded document, the assistant responds:
+Local Setup
+1. Clone the repository
+git clone https://github.com/AnjanaPujari/Smart-Document-AI-Assistant.git
+2. Navigate to the project
+cd Smart-Document-AI-Assistant
+3. Create a virtual environment
 
-Information not found in the document.
+Windows:
 
-## Important Security Note
+python -m venv venv
+4. Activate the virtual environment
 
-Never commit API keys, `.env` files, virtual environments, uploaded documents, or cache files to GitHub.
+Windows PowerShell:
 
-Keep sensitive information in environment variables and add sensitive files to `.gitignore`.
+venv\Scripts\Activate.ps1
+5. Install dependencies
+pip install -r requirements.txt
+6. Configure the Groq API key
 
-## Future Improvements
+Create an environment variable named:
 
-- Support for more document formats
-- Conversation history
-- Multiple document support
-- Authentication and user accounts
-- Persistent vector database
-- Better document metadata handling
-- Source citations for retrieved information
-- Deployment to a cloud platform
-- Improved UI and accessibility
+GROQ_API_KEY
 
-## Project Status
+Do not place the API key directly inside the source code.
+7. Start the application
+uvicorn main:app --reload
+8. Open the application
+http://127.0.0.1:8000
+Environment Variables
 
-The current version supports document upload, text extraction, semantic retrieval, AI-powered question answering, error handling, and a responsive web interface.
+The application requires:
+
+GROQ_API_KEY=your_groq_api_key
+
+For production deployment, the API key should be stored securely as an environment variable in Render.
+
+Deployment
+
+The application is deployed using Render.
+
+The GitHub repository is connected to the Render service, allowing new commits pushed to the main branch to trigger a new deployment.
+
+The production application is accessible through the Render deployment URL.
+
+Security
+
+The Groq API key is stored as an environment variable and is not included in the source code.
+
+Never commit API keys or other sensitive credentials to GitHub.
+
+The .gitignore file is used to prevent sensitive and unnecessary files from being committed.
+
+Testing
+
+The application has been tested for the following cases:
+
+PDF upload
+DOCX upload
+Questions with answers present in the document
+Questions whose answers are not present in the document
+Empty questions
+Invalid file types
+Loading state
+Error handling
+Document processing
+AI answer generation
+Production deployment
+Frontend and backend communication
+Current Limitations
+Only one active document is handled at a time.
+Uploading another document replaces the current FAISS index.
+Scanned or image-only PDFs may not produce readable text because OCR is not currently implemented.
+Answer quality depends on the quality of extracted text and retrieved chunks.
+The application is designed primarily for relatively small documents.
+The free deployment environment has limited memory and processing resources.
+Future Improvements
+Multiple document support
+Document management and deletion
+OCR support for scanned documents
+Improved semantic chunking
+Conversation history
+User authentication
+Source citations for generated answers
+Document preview
+Streaming AI responses
+Cloud-based document storage
+Improved scalability for larger documents
+Why This Project?
+
+Large documents can contain a significant amount of information, making manual searching time-consuming.
+
+Smart Document AI Assistant provides a simple interface where users can upload a document and ask questions in natural language.
+Instead of relying only on keyword matching, the application uses semantic embeddings and vector similarity search to retrieve relevant parts of the document before generating an AI-powered answer.
+
+Author
+
+Anjana Pujari
+
+AIML Engineering Student
+
+GitHub:
+
+https://github.com/AnjanaPujari
