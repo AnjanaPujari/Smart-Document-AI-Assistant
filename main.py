@@ -135,10 +135,9 @@ def serve_frontend():
 @app.get("/")
 def home():
 
-    return {
-        "message":
-            "Hello, Smart Document AI Assistant!"
-    }
+    return FileResponse(
+            "frontend/index.html"
+    )
 
 
 @app.get("/status")
