@@ -2,7 +2,6 @@ fastapi
 uvicorn
 sentence-transformers
 faiss-cpu
-pydantic
 pypdf
 python-docx
 langchain-groq
