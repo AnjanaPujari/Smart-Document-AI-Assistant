@@ -2,20 +2,22 @@ from fastapi import FastAPI, UploadFile, File
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 
+from fastembed import TextEmbedding
 import faiss
 import uuid
 import os
+import numpy as np
+
 from pypdf import PdfReader
 from docx import Document
 from langchain_groq import ChatGroq
 
 
-os.environ["TOKENIZERS_PARALLELISM"] = "false"
-os.environ["OMP_NUM_THREADS"] = "1"
-os.environ["MKL_NUM_THREADS"] = "1"
-
-
 # MODELS
+
+embedding_model = TextEmbedding(
+    model_name="sentence-transformers/all-MiniLM-L6-v2"
+)
 
 llm = ChatGroq(
     model="openai/gpt-oss-20b",
@@ -30,30 +32,33 @@ index = faiss.IndexFlatIP(384)
 chunks = []
 
 
-# EMBEDDING MODEL
+# CREATE EMBEDDINGS
 
-def create_embedding_model():
+def create_embeddings(texts):
 
-    from sentence_transformers import SentenceTransformer
-
-    return SentenceTransformer(
-        "all-MiniLM-L6-v2",
-        device="cpu"
+    embeddings = list(
+        embedding_model.embed(texts)
     )
+
+    embeddings = np.array(
+        embeddings,
+        dtype="float32"
+    )
+
+    faiss.normalize_L2(embeddings)
+
+    return embeddings
 
 
 # SEARCH DOCUMENTS
 
 def search_documents(query, chunks, k=3):
 
-    embedding_model = create_embedding_model()
-
-    query_embedding = embedding_model.encode(
-        [query],
-        normalize_embeddings=True
+    query_embedding = create_embeddings(
+        [query]
     )
 
-    del embedding_model
+    k = min(k, len(chunks))
 
     distances, indices = index.search(
         query_embedding,
@@ -71,6 +76,36 @@ def search_documents(query, chunks, k=3):
             )
 
     return valid_chunks, distances
+
+
+# GROQ ANSWER GENERATION
+
+def generate_answer(query, context):
+
+    prompt = f"""
+You are a document question-answering assistant.
+
+Use ONLY the information provided in the context.
+
+Context:
+{context}
+
+Question:
+{query}
+
+Answer the question directly and completely.
+Do not use outside knowledge.
+Do not include unrelated information.
+
+If the answer is not present in the context, say:
+Information not found in the document.
+
+Answer:
+"""
+
+    response = llm.invoke(prompt)
+
+    return response.content.strip()
 
 
 # FASTAPI
@@ -288,14 +323,9 @@ def upload_file(
 
     chunks = all_chunks
 
-    embedding_model = create_embedding_model()
-
-    embeddings = embedding_model.encode(
-        chunks,
-        normalize_embeddings=True
+    embeddings = create_embeddings(
+        chunks
     )
-
-    del embedding_model
 
     index.reset()
 
@@ -328,6 +358,18 @@ def upload_file(
 
 @app.post("/search")
 def search(query: str):
+
+    query = query.strip()
+
+    if not query:
+
+        return {
+            "query":
+                query,
+
+            "answer":
+                "Please enter a question."
+        }
 
     if not chunks:
 
@@ -390,33 +432,3 @@ def search(query: str):
         "answer":
             answer
     }
-
-
-# GROQ ANSWER GENERATION
-
-def generate_answer(query, context):
-
-    prompt = f"""
-You are a document question-answering assistant.
-
-Use ONLY the information provided in the context.
-
-Context:
-{context}
-
-Question:
-{query}
-
-Answer the question directly and completely.
-Do not use outside knowledge.
-Do not include unrelated information.
-
-If the answer is not present in the context, say:
-Information not found in the document.
-
-Answer:
-"""
-
-    response = llm.invoke(prompt)
-
-    return response.content.strip()

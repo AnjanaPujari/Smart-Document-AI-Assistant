@@ -1,8 +1,9 @@
 fastapi
 uvicorn
-sentence-transformers
 faiss-cpu
 pypdf
 python-docx
 langchain-groq
+numpy
+fastembed
 python-multipart
