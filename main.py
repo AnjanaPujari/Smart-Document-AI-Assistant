@@ -2,7 +2,6 @@ from fastapi import FastAPI, UploadFile, File
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 
-from sentence_transformers import SentenceTransformer
 import faiss
 import uuid
 import os
@@ -11,13 +10,12 @@ from docx import Document
 from langchain_groq import ChatGroq
 
 
-# --------------------------------------------------
-# MODELS
-# --------------------------------------------------
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
+os.environ["OMP_NUM_THREADS"] = "1"
+os.environ["MKL_NUM_THREADS"] = "1"
 
-embedding_model = SentenceTransformer(
-    "all-MiniLM-L6-v2"
-)
+
+# MODELS
 
 llm = ChatGroq(
     model="openai/gpt-oss-20b",
@@ -25,25 +23,37 @@ llm = ChatGroq(
 )
 
 
-# --------------------------------------------------
 # FAISS
-# --------------------------------------------------
 
 index = faiss.IndexFlatIP(384)
 
 chunks = []
 
 
-# --------------------------------------------------
+# EMBEDDING MODEL
+
+def create_embedding_model():
+
+    from sentence_transformers import SentenceTransformer
+
+    return SentenceTransformer(
+        "all-MiniLM-L6-v2",
+        device="cpu"
+    )
+
+
 # SEARCH DOCUMENTS
-# --------------------------------------------------
 
 def search_documents(query, chunks, k=3):
+
+    embedding_model = create_embedding_model()
 
     query_embedding = embedding_model.encode(
         [query],
         normalize_embeddings=True
     )
+
+    del embedding_model
 
     distances, indices = index.search(
         query_embedding,
@@ -55,9 +65,13 @@ def search_documents(query, chunks, k=3):
     for i in indices[0]:
 
         if i >= 0 and i < len(chunks):
-            valid_chunks.append(chunks[i])
+
+            valid_chunks.append(
+                chunks[i]
+            )
 
     return valid_chunks, distances
+
 
 # FASTAPI
 
@@ -82,7 +96,6 @@ def serve_frontend():
 
 
 # BASIC ENDPOINTS
-
 
 @app.get("/")
 def home():
@@ -153,6 +166,7 @@ def extract_docx_text(file_path):
         text = paragraph.text.strip()
 
         if text:
+
             full_text.append(text)
 
     for table in document.tables:
@@ -166,6 +180,7 @@ def extract_docx_text(file_path):
                 text = cell.text.strip()
 
                 if text:
+
                     row_text.append(text)
 
             if row_text:
@@ -273,10 +288,14 @@ def upload_file(
 
     chunks = all_chunks
 
+    embedding_model = create_embedding_model()
+
     embeddings = embedding_model.encode(
         chunks,
         normalize_embeddings=True
     )
+
+    del embedding_model
 
     index.reset()
 
@@ -306,7 +325,6 @@ def upload_file(
 
 
 # SEARCH
-
 
 @app.post("/search")
 def search(query: str):
