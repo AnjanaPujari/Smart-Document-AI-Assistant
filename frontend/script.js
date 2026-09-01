@@ -89,7 +89,7 @@ async function uploadDocument(file) {
         answerContent.innerHTML = `
             <p class="empty-answer">
                 Document uploaded successfully.
-                Ask a question below.
+                Ask a question above.
             </p>
         `;
 
